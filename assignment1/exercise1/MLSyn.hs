@@ -25,15 +25,11 @@ data Pos = M Num | N Name
 
 -- Parameters
 --
-data Pars = Pars [Name]
-            deriving Show
---data Pars = MPars Name Pars | NPars Name
+type Pars = [Name]
 
 -- Values
 --
-data Vals = Vals [Num]
-            deriving Show
---data Vals = MVals Num Vals | NVals Num
+type Vals = [Num]
 
 
 -- Terminal Symbol types
@@ -50,10 +46,10 @@ type Name = String
 --      pen down
 --      moveto (x2, y2)
 --      pen up
-vector = (Def "vector" 
-              (Pars ["x1","y1","x2","y2"]) 
-              (Seq [Pen Up, 
-                    MoveTo (N "x1") (N "y1"),
-                    Pen Down,
-                    MoveTo (N "x2") (N "y2"),
-                    Pen Up]))
+vector = Def "vector"
+             ["x1","y1","x2","y2"]
+             (Seq [Pen Up,
+                   MoveTo (N "x1") (N "y1"),
+                   Pen Down,
+                   MoveTo (N "x2") (N "y2"),
+                   Pen Up])
