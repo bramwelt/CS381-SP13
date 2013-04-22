@@ -16,12 +16,10 @@ data Cmd = Pen Mode
 -- Mode
 --
 data Mode = Up | Down
-            deriving Show
 
 -- Position
 --
 data Pos = M Num | N Name
-           deriving Show
 
 -- Parameters
 --
@@ -36,6 +34,17 @@ type Vals = [Num]
 --
 type Num = Int
 type Name = String
+
+
+-- Show implementations
+--
+instance Show Mode where
+    show Up   = "up"
+    show Down = "down"
+
+instance Show Pos where
+    show (M a) = show a
+    show (N b) = b
 
 -- Vector macro
 --
