@@ -62,3 +62,42 @@ vector = Def "vector"
                    Pen Down,
                    MoveTo (N "x2") (N "y2"),
                    Pen Up])
+
+steps :: Int -> Cmd
+steps a | a <= 1  = Seq [Call "vector" [0, 0, 0, 1],
+                         Call "vector" [0, 1, 1, 1]]
+steps a           = Seq [steps (a-1),
+                         Seq [Call "vector" [a-1, a-1, a-1, a],
+                              Call "vector" [a-1, a, a, a]]]
+
+--
+-- Attemps at simplifying steps
+--
+--t = (Seq [Seq [Pen Up]])
+--t2 = (Seq [t])
+--t3 = (Seq [Seq [Seq [Pen Down]]])
+--
+--simp :: Cmd -> Cmd
+--simp (Seq [Seq a]) = simp (Seq a)
+--simp a       = a
+--
+----b = Seq [Call "vector", Call "vector" .. ]
+--
+---- cv1 0 = 0, 0, 0, 1
+----
+--cv1 :: Int -> Cmd
+--cv1 a = Call "vector" [a, a, a, a+1]
+--
+---- cv2 1 = 0, 1, 1, 1
+--cv2 :: Int -> Cmd
+--cv2 a = Call "vector" [a-1, a, a, a]
+--
+---- Steps constructs a ML program that draws a stair of n steps
+----
+--steps :: Int -> Cmd
+--steps a = Seq z
+--        where z
+--              a <= 1    = [cv1 (a-1), cv2 a]
+--              otherwise = [steps (a-1), cv1 (a-1), cv2 a]
+
+--a = steps 3
