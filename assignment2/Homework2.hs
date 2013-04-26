@@ -10,9 +10,13 @@ data Cmd = LD Int
          | DUP
 
 type Stack = [Int]
+-- Do we instantiate a stack and work on it? should D be a Maybe Stack?? We'll
+-- need both a stack and a program in order to run the commands and turn
+-- anything into ints.
+
 
 -- TODO
--- type D = 
+type D = Maybe Int 
 -- sem :: Prog -> D
 -- semCmd :: Cmd -> D
 
