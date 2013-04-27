@@ -53,12 +53,37 @@ test4 = [LD 2, DUP, MULT] -- [2] -> [2, 2] -> [4]
 data Cmd3 = Pen Mode
           | MoveTo Int Int
           | Seq Cmd3 Cmd3
+          deriving Show
+
 data Mode = Up | Down
+          deriving (Show, Eq)
 
 type State = (Mode,Int,Int)
 type Line = (Int,Int,Int,Int)
 type Lines = [Line]
 
--- TODO: 
--- semS :: Cmd3 -> State -> (State,Lines)
--- sem' :: Cmd3 -> Lines
+semS :: Cmd3 -> State -> (State,Lines)
+-- Change state if pen was up and now down, or vise versa.
+--  Otherwise keep state, produce no lines.
+semS (Pen a)      s@(b, x, y)    | a /= b  = ((a, x, y), [])
+                                 | otherwise = (s, [])
+-- If moving to new position and pen is Down, a line is created,
+--  Otherwise keep state, and produce no lines.
+semS (MoveTo a b) (Down, x, y)   = ((Down, x, y), [(x, y, a, b)])
+semS (MoveTo _ _) s@(Up, _, _)   = semS (Pen Up) s
+-- The state from the first .. nvm This is handled in the parent
+--   function sem'
+semS (Seq a b) s                 = semS a (fst (semS b s))
+
+-- Initial State
+sinit = (Up, 0, 0)
+
+sem' :: Cmd3 -> Lines
+-- Keeps track of lines created
+sem' (Seq a b) = snd (s1) ++ snd (semS b (fst s1))
+               where s1 = semS a sinit
+-- Otherwise just get lines produced
+sem' a = snd (semS a sinit)
+
+ltest1 = Seq (Pen Down) (
+             Seq (MoveTo 1 1) (MoveTo 3 5))
