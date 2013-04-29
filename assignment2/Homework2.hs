@@ -65,15 +65,16 @@ type Lines = [Line]
 semS :: Cmd3 -> State -> (State,Lines)
 -- Change state if pen was up and now down, or vise versa.
 --  Otherwise keep state, produce no lines.
-semS (Pen a)      s@(b, x, y)    | a /= b  = ((a, x, y), [])
-                                 | otherwise = (s, [])
+semS (Pen m1)       s@(m2, x, y) | m1 /= m2             = ((m1, x, y), [])
+                                 | otherwise            = (s, [])
 -- If moving to new position and pen is Down, a line is created,
 --  Otherwise keep state, and produce no lines.
-semS (MoveTo a b) (Down, x, y)   = ((Down, x, y), [(x, y, a, b)])
-semS (MoveTo _ _) s@(Up, _, _)   = semS (Pen Up) s
--- The state from the first .. nvm This is handled in the parent
---   function sem'
-semS (Seq a b) s                 = semS a (fst (semS b s))
+semS (MoveTo x1 y1) s@(m, x2, y2) | m == Up             = (ns, [])
+                                 | x1 /= x2 && y1 /= y2 = (s, [])
+                                 | otherwise            = (ns, [(x1, y1, x2, y2)])
+                                 where ns = (m, x1, x2)
+semS (Seq a b) s = semS b (fst (semS a s))
+
 
 -- Initial State
 sinit = (Up, 0, 0)
@@ -85,5 +86,6 @@ sem' (Seq a b) = snd (s1) ++ snd (semS b (fst s1))
 -- Otherwise just get lines produced
 sem' a = snd (semS a sinit)
 
-ltest1 = Seq (Pen Down) (
-             Seq (MoveTo 1 1) (MoveTo 3 5))
+ltest1 = Seq (Pen Down) (MoveTo 1 1) -- [(0, 0, 1, 1)]
+ltest2 = Seq (Pen Down) (
+             Seq (MoveTo 1 1) (MoveTo 3 5)) -- [(0, 0, 1, 1), (1, 1, 3, 5)]
