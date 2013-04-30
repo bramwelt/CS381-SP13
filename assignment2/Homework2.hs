@@ -1,3 +1,7 @@
+--Trevor Bramwell
+--Daniel Reichert
+--Emily Dunham
+
 module Homework2 where
 
 {----------------------- Exercise 1 -------------------------}
