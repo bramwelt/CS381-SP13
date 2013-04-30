@@ -12,31 +12,35 @@ data Cmd = LD Int
 
 type Stack = [Int]
 
-type D = Stack -> Stack
+type D = Maybe Stack -> Maybe Stack
 
 --semCmd :: Cmd -> Stack -> Stack
 semCmd :: Cmd -> D
-semCmd (LD a) xs = [a] ++ xs
-semCmd (ADD)  xs = case xs of (x1:x2:xs) -> [x1+x2] ++ xs
-                              a          -> error ("ADD: "  ++ show a)
-semCmd (MULT) xs = case xs of (x1:x2:xs) -> [x1*x2] ++ xs
-                              a          -> error ("MULT: " ++ show a)
-semCmd (DUP) xs  = case xs of (x1:xs)    -> [x1,x1] ++ xs
-                              a          -> error ("DUP: "  ++ show a)
+semCmd (LD a) xs = case xs of Just xs         -> Just ([a] ++ xs)
+                              _               -> Nothing
+semCmd (ADD)  xs = case xs of Just (x1:x2:xs) -> Just ([x1+x2] ++ xs)
+                              _               -> Nothing
+semCmd (MULT) xs = case xs of Just (x1:x2:xs) -> Just ([x1*x2] ++ xs)
+                              _               -> Nothing
+semCmd (DUP) xs  = case xs of Just (x1:xs)    -> Just ([x1,x1] ++ xs)
+                              _               -> Nothing
 
 --sem :: Prog -> Stack -> Stack
 sem :: Prog -> D
 sem [] a = a
 sem (x:xs) a = sem xs (semCmd x a)
 
-eval :: Prog -> Stack
-eval p = sem p []
+eval :: Prog -> Maybe Stack
+eval p = sem p (Just [])
 
 --Test data
-test1 = [LD 3, DUP, ADD, DUP, MULT] -- [3] -> [3,3] -> [6] -> [6,6] -> [36]
-test2 = [LD 3, ADD] -- Error
-test3 = [] -- []
-test4 = [LD 2, DUP, MULT] -- [2] -> [2, 2] -> [4]
+test1 = [LD 3, DUP, ADD, DUP, MULT] -- [3] -> [3,3] -> [6] -> [6,6] -> Just [36]
+test2 = [LD 3, ADD] -- Nothing
+test3 = [] -- Just []
+test4 = [LD 2, DUP, MULT] -- [2] -> [2, 2] -> Just [4]
+-- test5 = [DUP] -- Nothing
+-- test6 = [LD 3, LD 8, ADD, LD 5, MULT] -- Just [55]
+-- test7 = [LD 3, MULT] -- Nothing
 
 {----------------------- Exercise 2 -------------------------}
 
