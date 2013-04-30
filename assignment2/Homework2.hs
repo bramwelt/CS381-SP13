@@ -11,22 +11,18 @@ data Cmd = LD Int
          deriving Show
 
 type Stack = [Int]
--- Do we instantiate a stack and work on it? should D be a Maybe Stack?? We'll
--- need both a stack and a program in order to run the commands and turn
--- anything into ints.
 
-
--- TODO
 type D = Stack -> Stack
--- sem :: Prog -> D
--- semCmd :: Cmd -> D
 
 --semCmd :: Cmd -> Stack -> Stack
 semCmd :: Cmd -> D
-semCmd (LD a) = \xs         -> [a] ++ xs
-semCmd (ADD)  = \(x1:x2:xs) -> [x1+x2] ++ xs
-semCmd (MULT) = \(x1:x2:xs) -> [x1*x2] ++ xs
-semCmd (DUP)  = \(x1:xs)    -> [x1,x1] ++ xs
+semCmd (LD a) xs = [a] ++ xs
+semCmd (ADD)  xs = case xs of (x1:x2:xs) -> [x1+x2] ++ xs
+                              a          -> error ("ADD: "  ++ show a)
+semCmd (MULT) xs = case xs of (x1:x2:xs) -> [x1*x2] ++ xs
+                              a          -> error ("MULT: " ++ show a)
+semCmd (DUP) xs  = case xs of (x1:xs)    -> [x1,x1] ++ xs
+                              a          -> error ("DUP: "  ++ show a)
 
 --sem :: Prog -> Stack -> Stack
 sem :: Prog -> D
