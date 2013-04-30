@@ -45,38 +45,44 @@ test4 = [LD 2, DUP, MULT] -- [2] -> [2, 2] -> Just [4]
 {----------------------- Exercise 2 -------------------------}
 
 data Cmd2 = C Cmd
---          | DEF String Prog
---          | CALL String
+          | DEF String Prog
+          | CALL String
             deriving Show
 
 type Prog2  = [Cmd2]
-type Macros = [(State, Prog)]
+type Macros = [(String, Prog)]
+type State = (Macros, Maybe Stack)
 
 -- PorM types are a union of Prog2 and Macros
 data PorM = P Prog2
           | M Macros
           deriving Show
 
+type E = Maybe State -> Maybe State
+
 -- Define the sematics of a program
-sem2 :: Prog2 -> D
+sem2 :: Prog2 -> E
 sem2 [] a = a
 sem2 (x:xs) a = sem2 xs (semCmd2 x a)
 
 
 -- Define the semantics of Cmd2s
-semCmd2 :: Cmd2-> D
-semCmd2 (C (LD a)) xs = case xs of Just xs     -> Just ([a] ++ xs)
-                                   _           -> Nothing
-semCmd2 (C (ADD))  xs = case xs of Just (x1:x2:xs) -> Just ([x1+x2] ++ xs)
-                                   _               -> Nothing
-semCmd2 (C (MULT)) xs = case xs of Just (x1:x2:xs) -> Just ([x1*x2] ++ xs)
-                                   _               -> Nothing
-semCmd2 (C (DUP)) xs  = case xs of Just (x1:xs)    -> Just ([x1,x1] ++ xs)
-                                   _               -> Nothing
+semCmd2 :: Cmd2 -> E
+-- Shellout to previous sem function
+semCmd2 (C c)       (m, st) = m, semCmd (C c) st
+semCmd2 (Def cmd p) (m, st) = [(cmd, p)] ++ m, st
+semCmd2 (Call cmd)  (m, st) = semCmd2 cmd (m, st)
+-- New commands
+semCmd2 c           (m, st) = (m, map semCmd2 nCmd)
+                              where nCmd = snd (c, prog):m
 
 -- Evaluate a Prog2 type
-eval2 :: Prog2 -> Maybe Stack
-eval2 p = sem2 p (Just [])
+--eval2 :: PorM -> Macros
+--eval2 p = sem2 p (Just [])
+
+
+
+mtest1 = [DEF "foo" [DUP, ADD, MULT]] -- [("foo", [DUP, ADD, MULT])]
 
 {----------------------- Exercise 3 -------------------------}
 
