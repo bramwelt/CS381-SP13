@@ -69,23 +69,29 @@ semS (Pen m1)       s@(m2, x, y) | m1 /= m2             = ((m1, x, y), [])
                                  | otherwise            = (s, [])
 -- If moving to new position and pen is Down, a line is created,
 --  Otherwise keep state, and produce no lines.
-semS (MoveTo x1 y1) s@(m, x2, y2) | m == Up             = (ns, [])
-                                 | x1 /= x2 && y1 /= y2 = (s, [])
-                                 | otherwise            = (ns, [(x1, y1, x2, y2)])
-                                 where ns = (m, x1, x2)
-semS (Seq a b) s = semS b (fst (semS a s))
+semS (MoveTo x1 y1) (m, x2, y2)  | m == Up              = (ns, [])
+                                 | x1 /= x2 && y1 /= y2 = (ns, [(x2, y2, x1, y1)])
+                                 | otherwise            = (ns, [])
+                                 where ns = (m, x1, y1)
+semS (Seq a b) s = (fst s2, snd s1 ++ snd s2)
+                 where 
+                    s1 = semS a s
+                    s2 = semS b (fst s1)
 
+-- lsem1 = semS (Pen Down) (Up, 0, 0) -- ((Down, 0, 0) [])
+-- lsem2 = semS (Pen Up) (Down, 0, 0) -- ((Down, 0, 0) [])
+-- lsem3 = semS (MoveTo 2 3) (Up, 0, 0) -- ((Up, 2, 3), [])
+-- lsem4 = semS (MoveTo 2 3) (Down, 1, 1) -- ((Down, 2, 3), [(1, 1, 2, 3)])
+-- lsem5 = semS ((MoveTo 1 1) `Seq` (MoveTo 2 2)) (Up, 0, 0) -- ((Up 2, 2), [])
 
 -- Initial State
 sinit = (Up, 0, 0)
 
 sem' :: Cmd3 -> Lines
 -- Keeps track of lines created
-sem' (Seq a b) = snd (s1) ++ snd (semS b (fst s1))
-               where s1 = semS a sinit
--- Otherwise just get lines produced
 sem' a = snd (semS a sinit)
 
-ltest1 = Seq (Pen Down) (MoveTo 1 1) -- [(0, 0, 1, 1)]
-ltest2 = Seq (Pen Down) (
-             Seq (MoveTo 1 1) (MoveTo 3 5)) -- [(0, 0, 1, 1), (1, 1, 3, 5)]
+ltest1 = Pen Down `Seq` MoveTo 1 1
+ftest1 = sem' ltest1 -- [(0, 0, 1, 1)]
+ltest2 = Pen Down `Seq` MoveTo 1 1 `Seq` MoveTo 3 5
+ftest2 = sem' ltest2 -- [(0, 0, 1, 1), (1, 1, 3, 5)]
