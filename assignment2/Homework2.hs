@@ -44,8 +44,8 @@ test4 = [LD 2, DUP, MULT] -- [2] -> [2, 2] -> Just [4]
 
 {----------------------- Exercise 2 -------------------------}
 
-data Cmd2 = C Cmd
-          | DEF String Prog
+data Cmd2 = C Cmd2
+          | DEF String Prog2
           | CALL String
             deriving Show
 
@@ -69,9 +69,9 @@ sem2 (x:xs) a = sem2 xs (semCmd2 x a)
 -- Define the semantics of Cmd2s
 semCmd2 :: Cmd2 -> E
 -- Shellout to previous sem function
-semCmd2 (C c)       (m, st) = m, semCmd (C c) st
-semCmd2 (Def cmd p) (m, st) = [(cmd, p)] ++ m, st
-semCmd2 (Call cmd)  (m, st) = semCmd2 cmd (m, st)
+semCmd2 (C c)       (m, st) = (m, semCmd (C c) st)
+semCmd2 (DEF cmd p) (m, st) = [(cmd, p)] ++ (m, st)
+semCmd2 (CALL cmd)  (m, st) = semCmd2 cmd (m, st)
 -- New commands
 semCmd2 c           (m, st) = (m, map semCmd2 nCmd)
                               where nCmd = snd (c, prog):m
@@ -94,11 +94,11 @@ data Cmd3 = Pen Mode
 data Mode = Up | Down
           deriving (Show, Eq)
 
-type State = (Mode,Int,Int)
+type State3 = (Mode,Int,Int)
 type Line = (Int,Int,Int,Int)
 type Lines = [Line]
 
-semS :: Cmd3 -> State -> (State,Lines)
+semS :: Cmd3 -> State3 -> (State,Lines)
 -- Change state if pen was up and now down, or vise versa.
 --  Otherwise keep state, produce no lines.
 semS (Pen m1)       s@(m2, x, y) | m1 /= m2             = ((m1, x, y), [])
