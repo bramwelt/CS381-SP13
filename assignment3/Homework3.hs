@@ -8,6 +8,56 @@ module Homework3 where
 
 {----------------------- Exercise 1 -------------------------}
 
+type Prog = [Cmd]
+
+data Cmd = LD Int
+         | ADD
+         | MULT
+         | DUP
+         -- Increment the topmost element of the stack.
+         | INC
+         -- Exchange the two topmost elements on the stack.
+         | SWAP
+         -- Pops k elements off the top of the stack.
+         | POP Int
+
+{-
+Rank (n, m) 
+  - n is the number of elements the operation takes from the stack.
+  - m is the number of elements the operation puts on the stack.
+
+  The rank for a program is defined as the rank that would be obtained
+  if the program were run on an empty stack.
+
+  A rank error indicates stack underflow
+-}
+
+type Rank = Int
+type CmdRank = (Int, Int)
+
+-- Map each stack to its rank
+{- TODO rankC :: Cmd -> CmdRank -}
+
+-- Compute the rank of a program. Nothing represents Errors.
+-- defined in terms of 'rank'
+{- TODO rankP :: Prog -> Maybe Prog -}
+
+
+-- Given a program and its rank, compute the rank outcome
+{- TODO rank :: Prog -> Rank -> Maybe Rank -}
+
+
+{--- Part (b) ---}
+
+-- Follow example in 'example/TypeCheck.hs'
+-- First calls 'rankP' to check type correctness, then 'sem' if correct.
+{- TODO semStatTC -}
+
+{- TODO Answer the question: 
+           What is the new type of the function sem and why can the
+           function definition be simplified to have this type?
+-}
+
 
 
 {----------------------- Exercise 2 -------------------------}
