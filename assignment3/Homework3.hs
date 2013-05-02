@@ -36,7 +36,14 @@ type Rank = Int
 type CmdRank = (Int, Int)
 
 -- Map each stack to its rank
-{- TODO rankC :: Cmd -> CmdRank -}
+rankC :: Cmd -> CmdRank
+rankC (LD a)  = (0, 1)
+rankC ADD     = (2, 1)
+rankC MULT    = (2, 1)
+rankC DUP     = (1, 1)
+rankC INC     = (1, 1)
+rankC SWAP    = (2, 2)
+rankC (POP i) = (1, 0)
 
 -- Compute the rank of a program. Nothing represents Errors.
 -- defined in terms of 'rank'
