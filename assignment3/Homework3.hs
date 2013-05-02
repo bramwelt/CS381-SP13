@@ -21,6 +21,13 @@ data Cmd = LD Int
          -- Pops k elements off the top of the stack.
          | POP Int
 
+p1 = [LD 3, DUP, ADD, LD 5, SWAP] -- Just [6, 5]
+p2 = [LD 8, POP 1, LD 3, DUP, POP 2, LD 4] -- Just [4]
+p3 = [LD 3, LD 4, LD 5, MULT, ADD] -- Just [23]
+p4 = [LD 2, ADD] -- Nothing
+p5 = [DUP] -- Nothing
+p6 = [POP 1] -- Nothing
+
 {-
 Rank (n, m) 
   - n is the number of elements the operation takes from the stack.
@@ -47,7 +54,7 @@ rankC (POP i) = (1, 0)
 
 -- Compute the rank of a program. Nothing represents Errors.
 -- defined in terms of 'rank'
-{- TODO rankP :: Prog -> Maybe Prog -}
+{- TODO rankP :: Prog -> Maybe Rank -}
 
 
 -- Given a program and its rank, compute the rank outcome
