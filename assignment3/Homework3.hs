@@ -45,7 +45,7 @@ sem :: Prog -> D
 sem [] a = a
 sem (x:xs) a = sem xs (semCmd x a)
 
--- Map each stack to its rank
+-- Assign ranks to commands
 -- (n, m) n the number of elements removed from the stack
 --        m the number of elements added to the stack
 --
@@ -58,13 +58,10 @@ rankC INC     = (1, 1)
 rankC SWAP    = (2, 2)
 rankC (POP a) = (a, 0)
 
--- Compute the rank of a program. Nothing represents Errors.
--- defined in terms of 'rank'
---
 rankP :: Prog -> Maybe Rank
 rankP xs = rank xs 0
 
--- Given a program and its rank, compute the rank outcome
+-- Rank a program
 --
 rank :: Prog -> Rank -> Maybe Rank
 rank []     r | r >= 0     = Just r
@@ -77,8 +74,6 @@ rank _      _ = Nothing
 
 data Type = A Stack | TypeError deriving Show
 
--- Follow example in 'example/TypeCheck.hs'
--- First calls 'rankP' to check type correctness, then 'sem' if correct.
 typeSafe :: Prog -> Bool
 typeSafe p = (rankP p) /= Nothing
 
@@ -86,9 +81,15 @@ semStatTC :: Prog -> Type
 semStatTC p | typeSafe p = A (sem p [])
             | otherwise  = TypeError
 
-{- TODO Answer the question: 
-           What is the new type of the function sem and why can the
-           function definition be simplified to have this type?
+{-
+  Question:
+      What is the new type of the function sem and why can the
+      function definition be simplified to have this type?
+
+  Answer:
+       The new type of sem is 'Prog -> D' where type D = Stack -> Stack.
+       type D can be simplified to no longer contain Maybe Stacks,
+       because the type checker handles all TypeErrors.
 -}
 
 p1 = [LD 3, DUP, ADD, LD 5, SWAP] -- Just [6, 5]
