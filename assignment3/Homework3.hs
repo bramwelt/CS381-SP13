@@ -102,7 +102,47 @@ p6 = [POP 1] -- Nothing
 
 {----------------------- Exercise 2 -------------------------}
 
+data Shape = X
+           | TD Shape Shape
+           | LR Shape Shape
+           deriving Show
 
+type BBox = (Int, Int)
+
+{- (a) Define a type checker for the shape language -}
+--
+-- bbox :: Shape -> BBox
+
+{- (b) Define a type checker for the shape language that assigns
+       types only to rectangular shapes -}
+--
+-- rect :: Shape -> Maybe BBox
 
 {----------------------- Exercise 3 -------------------------}
 
+{- (a) Consider the functions f and g, which are given by the
+       following two function definitions. -}
+--
+-- f x y = if null x then [y] else x
+-- g x y = if not (null x) then [] else [y]
+
+{-
+ (1) What are the types of f and g?
+ (2) Explain why the functions have these types.
+ (3) Which type is more general?
+ (4) Why do f and g have different types?
+-}
+
+{- (b) Find a (simple) definition for a function h that has the
+      following type. -}
+--
+-- h :: [b] -> [(a, b)] -> [b]
+
+{- (c) Find a (simple) definition for a function k that has the 
+       following type. -}
+--
+-- k :: (a -> b) -> ((a -> b) -> a) -> b
+
+{- (d) Can you define a function of type a -> b?
+       If yes, explain your definition. If not, explain why it is
+       so difficult. -}
