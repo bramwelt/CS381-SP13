@@ -23,7 +23,7 @@ data Cmd = LD Int
          deriving Show
 
 type Stack = [Int]
-type D = Maybe Stack -> Maybe Stack
+type D = Stack -> Stack
 
 type Rank = Int
 type CmdRank = (Int, Int)
@@ -31,21 +31,19 @@ type CmdRank = (Int, Int)
 
 -- Semantics of individual Commands
 semCmd :: Cmd -> D
-semCmd (LD a) (Just xs)         = Just ([a] ++ xs)
-semCmd (ADD)  (Just (x1:x2:xs)) = Just ([x1+x2] ++ xs)
-semCmd (MULT) (Just (x1:x2:xs)) = Just ([x1*x2] ++ xs)
-semCmd (DUP)  (Just (x1:xs))    = Just ([x1,x1] ++ xs)
-semCmd _      _                 = Nothing
+semCmd (LD a)  xs         = [a] ++ xs
+semCmd (ADD)   (x1:x2:xs) = [x1+x2] ++ xs
+semCmd (MULT)  (x1:x2:xs) = [x1*x2] ++ xs
+semCmd (DUP)   (x1:xs)    = [x1,x1] ++ xs
+semCmd (INC)   (x1:xs)    = [succ x1] ++ xs
+semCmd (SWAP)  (x1:x2:xs) = (x2:x1:xs)
+semCmd (POP n) xs         = drop n xs
+semCmd _       _          = []
 
 -- Semantics of a Program
 sem :: Prog -> D
 sem [] a = a
 sem (x:xs) a = sem xs (semCmd x a)
-
--- Evaluation 'running' a program. Starts with an empty stack.
---
-eval :: Prog -> Maybe Stack
-eval p = sem p (Just [])
 
 -- Map each stack to its rank
 -- (n, m) n the number of elements removed from the stack
@@ -75,25 +73,30 @@ rank (x:xs) r | under >= 0 = rank xs (under+adds)
                     under        = r - subs
 rank _      _ = Nothing
 
-p1 = [LD 3, DUP, ADD, LD 5, SWAP] -- Just [6, 5]
-p2 = [LD 8, POP 1, LD 3, DUP, POP 2, LD 4] -- Just [4]
-p3 = [LD 3, LD 4, LD 5, MULT, ADD] -- Just [23]
-p4 = [LD 2, ADD] -- Nothing
-p5 = [DUP] -- Nothing
-p6 = [POP 1] -- Nothing
-
-
 {--- Part (b) ---}
+
+data Type = A Stack | TypeError deriving Show
 
 -- Follow example in 'example/TypeCheck.hs'
 -- First calls 'rankP' to check type correctness, then 'sem' if correct.
-{- TODO semStatTC -}
+typeSafe :: Prog -> Bool
+typeSafe p = (rankP p) /= Nothing
+
+semStatTC :: Prog -> Type
+semStatTC p | typeSafe p = A (sem p [])
+            | otherwise  = TypeError
 
 {- TODO Answer the question: 
            What is the new type of the function sem and why can the
            function definition be simplified to have this type?
 -}
 
+p1 = [LD 3, DUP, ADD, LD 5, SWAP] -- Just [6, 5]
+p2 = [LD 8, POP 1, LD 3, DUP, POP 2, LD 4] -- Just [4]
+p3 = [LD 3, LD 4, LD 5, MULT, ADD] -- Just [23]
+p4 = [LD 2, ADD] -- Nothing
+p5 = [DUP] -- Nothing
+p6 = [POP 1] -- Nothing
 
 
 {----------------------- Exercise 2 -------------------------}
