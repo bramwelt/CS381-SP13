@@ -142,6 +142,9 @@ rect (LR i j) -- heights must match; width will be sum
 
 r1 = TD (LR X X) (LR X X) -- bbox (2,2), rect Just (2,2)
 r2 = TD (LR X X) X -- bbox (2,2), rect Nothing
+r3 = LR (TD r1 X) (LR r2 r2)
+r4 = LR (TD r1 r1) (TD r1 r1)
+
 {----------------------- Exercise 3 -------------------------}
 
 {- (a) Consider the functions f and g, which are given by the
