@@ -113,12 +113,12 @@ type BBox = (Int, Int) -- (width, height) of bounding box
 --
 bbox :: Shape -> BBox
 bbox (TD i j) -- width is that of the wider one; height is sum of heights
-    | ix > jx = (ix, iy + jy)
+    | ix >= jx = (ix, iy + jy)
     | ix < jx = (jx, iy + jy) 
     where (ix, iy) = bbox i
           (jx, jy) = bbox j
 bbox (LR i j) -- width is sum of widths; height is that of the taller one
-    | iy > jy = (ix + jx, iy)
+    | iy >= jy = (ix + jx, iy)
     | iy < jy = (ix + jx, jy)
     where (ix, iy) = bbox i
           (jx, jy) = bbox j
