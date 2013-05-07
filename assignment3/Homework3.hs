@@ -120,20 +120,19 @@ bbox X = (1, 1)
 
 {- (b) Define a type checker for the shape language that assigns
        types only to rectangular shapes -}
---
+
 rect :: Shape -> Maybe BBox
 rect X = Just (1, 1)
--- data.maybe :: b -> (a -> b) -> Maybe a -> b
-rect (TD i j) = 
-    case rect i of
+rect (TD i j) =            -- widths must match, and bbox has that width and 
+    case rect i of         -- its height is sum of heights. Else Nothing.
         Nothing -> Nothing
         Just (ix, iy) -> case rect j of 
                          Nothing -> Nothing
                          Just (jx, jy) -> case (ix == jx) of
                                           True -> Just (ix, iy + jy)
                                           False -> Nothing
-rect (LR i j) = 
-    case rect i of
+rect (LR i j) =            -- heights must match, and bbox is that height
+    case rect i of         -- with width the sum of widths. Else Nothing.
         Nothing -> Nothing
         Just (ix, iy) -> case rect j of 
                          Nothing -> Nothing
@@ -141,6 +140,7 @@ rect (LR i j) =
                                           True -> Just (ix + jx, iy)
                                           False -> Nothing
 
+-- Test Shapes
 r1 = TD (LR X X) (LR X X) -- bbox (2,2), rect Just (2,2)
 r2 = TD (LR X X) X -- bbox (2,2), rect Nothing
 r3 = LR (TD r1 X) (LR r2 r2) -- bbox (6, 3), rect Nothing
