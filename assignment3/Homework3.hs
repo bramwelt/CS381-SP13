@@ -126,8 +126,7 @@ type BBox = (Int, Int)
 f x y = if null x then [y] else x
 g x y = if not (null x) then [] else [y]
 
-{-
-   (1) What are the types of f and g?
+{- (1) What are the types of f and g?
        f :: [a] -> a -> [a]
        g :: [a] -> b -> [b]
 
@@ -159,10 +158,31 @@ h :: [b] -> [(a, b)] -> [b]
 h b _ = b
 
 {- (c) Find a (simple) definition for a function k that has the 
-       following type. -}
+       following type.
 
--- k :: (a -> b) -> ((a -> b) -> a) -> b
+   k :: (a -> b) -> ((a -> b) -> a) -> b
 
-{- (d) Can you define a function of type a -> b?
-       If yes, explain your definition. If not, explain why it is
-       so difficult. -}
+   We can not find a (simple) definition for function k, as there is no
+   way in Haskell to pattern match a function and its parameters at the
+   same time. Also since the function signature only defines b in the
+   terms of being the return type of another function, we can not deduce
+   anything about how b should be represented.
+
+  (d) Can you define a function of type a -> b?
+      If yes, explain your definition. If not, explain why it is
+      so difficult.
+
+      No. Defining a function of type a -> b requires knowing something
+      about type b. Since we don't have that knowledge, we can not
+      define how something of type b should be represented. Anything we
+      might use would end up restricting what b might be, thus it would
+      not be of any type.
+
+      We could write:
+          j :: a -> b
+          j = j
+
+      But this is a circular definition and will never terminate, thus
+      we have not truly defined anything at all.
+
+-}
