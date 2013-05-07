@@ -107,16 +107,28 @@ data Shape = X
            | LR Shape Shape
            deriving Show
 
-type BBox = (Int, Int)
+type BBox = (Int, Int) -- (width, height) of bounding box
 
 {- (a) Define a type checker for the shape language -}
 --
--- bbox :: Shape -> BBox
+bbox :: Shape -> BBox
+bbox (TD i j) -- width is that of the wider one; height is sum of heights
+    | ix > jx = (ix, iy + jy)
+    | ix < jx = (jx, iy + jy) 
+    where (ix, iy) = bbox i
+          (jx, jy) = bbox j
+bbox (LR i j) -- width is sum of widths; height is that of the taller one
+    | iy > jy = (ix + jx, iy)
+    | iy < jy = (ix + jx, jy)
+    where (ix, iy) = bbox i
+          (jx, jy) = bbox j
+bbox X = (1, 1)
+
 
 {- (b) Define a type checker for the shape language that assigns
        types only to rectangular shapes -}
 --
--- rect :: Shape -> Maybe BBox
+--rect :: Shape -> Maybe BBox
 
 {----------------------- Exercise 3 -------------------------}
 
