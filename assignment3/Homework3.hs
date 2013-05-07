@@ -124,11 +124,22 @@ bbox (LR i j) -- width is sum of widths; height is that of the taller one
           (jx, jy) = bbox j
 bbox X = (1, 1)
 
-
 {- (b) Define a type checker for the shape language that assigns
        types only to rectangular shapes -}
 --
---rect :: Shape -> Maybe BBox
+rect :: Shape -> Maybe BBox
+rect X = Just (1, 1)
+rect (TD i j) -- widths must match; height will be sum
+    | ix == jx = Just (ix, iy + jy)
+    | otherwise = Nothing
+    where (ix, iy) = rect i
+          (jx, jy) = rect j
+rect (LR i j) -- heights must match; width will be sum
+    | iy == jy = Just (ix + jx, iy)
+    | otherwise = Nothing
+    where (ix, iy) = rect i
+          (jx, jy) = rect j
+
 
 {----------------------- Exercise 3 -------------------------}
 
