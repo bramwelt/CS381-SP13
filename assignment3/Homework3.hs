@@ -121,26 +121,46 @@ type BBox = (Int, Int)
 {----------------------- Exercise 3 -------------------------}
 
 {- (a) Consider the functions f and g, which are given by the
-       following two function definitions. -}
---
--- f x y = if null x then [y] else x
--- g x y = if not (null x) then [] else [y]
+    following two function definitions.  -}
+
+f x y = if null x then [y] else x
+g x y = if not (null x) then [] else [y]
 
 {-
- (1) What are the types of f and g?
- (2) Explain why the functions have these types.
- (3) Which type is more general?
- (4) Why do f and g have different types?
+   (1) What are the types of f and g?
+       f :: [a] -> a -> [a]
+       g :: [a] -> b -> [b]
+
+   (2) Explain why the functions have these types.
+       Since f will return either [y] or x, and x is a list, the elements
+       of x have to be of the same type as y. This is because, to the
+       best of our knowledge) Haskell can't return two different types
+       from a function.
+
+       While similar to f, g will return either [] or [y]. The subtle
+       difference here is that y now has no relation to x, since a list
+       is a phantom type. This make Haskell assume the second argument
+       to g is not the same type as the first.
+
+   (3) Which type is more general?
+       Because both f and g will work with any types they are both
+       general, but one could make the argument that because g works
+       with more than one type, it is more general.
+
+   (4) Why do f and g have different types?
+       f and g have different types because of the magic of Haskell type
+       inference.
 -}
 
 {- (b) Find a (simple) definition for a function h that has the
       following type. -}
---
--- h :: [b] -> [(a, b)] -> [b]
+
+h :: [b] -> [(a, b)] -> [b]
+h b _ = b
 
 {- (c) Find a (simple) definition for a function k that has the 
        following type. -}
---
+
 -- k :: (a -> b) -> ((a -> b) -> a) -> b
 
 {- (d) Can you define a function of type a -> b?
