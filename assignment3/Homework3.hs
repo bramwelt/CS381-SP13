@@ -123,21 +123,29 @@ bbox X = (1, 1)
 --
 rect :: Shape -> Maybe BBox
 rect X = Just (1, 1)
-rect (TD i j) -- widths must match; height will be sum
-    | ix == jx = Just (ix, iy + jy)
-    | otherwise = Nothing
-    where Just (ix, iy) = rect i
-          Just (jx, jy) = rect j
-rect (LR i j) -- heights must match; width will be sum
-    | iy == jy = Just (ix + jx, iy)
-    | otherwise = Nothing
-    where Just (ix, iy) = rect i
-          Just (jx, jy) = rect j
+-- data.maybe :: b -> (a -> b) -> Maybe a -> b
+rect (TD i j) = 
+    case rect i of
+        Nothing -> Nothing
+        Just (ix, iy) -> case rect j of 
+                         Nothing -> Nothing
+                         Just (jx, jy) -> case (ix == jx) of
+                                          True -> Just (ix, iy + jy)
+                                          False -> Nothing
+rect (LR i j) = 
+    case rect i of
+        Nothing -> Nothing
+        Just (ix, iy) -> case rect j of 
+                         Nothing -> Nothing
+                         Just (jx, jy) -> case (iy == jy) of
+                                          True -> Just (ix + jx, iy)
+                                          False -> Nothing
 
 r1 = TD (LR X X) (LR X X) -- bbox (2,2), rect Just (2,2)
 r2 = TD (LR X X) X -- bbox (2,2), rect Nothing
-r3 = LR (TD r1 X) (LR r2 r2)
-r4 = LR (TD r1 r1) (TD r1 r1)
+r3 = LR (TD r1 X) (LR r2 r2) -- bbox (6, 3), rect Nothing
+r4 = LR (TD r1 r1) (TD r1 r1) -- bbox (4, 4), rect Nothing
+r5 = LR r4 r4 -- bbox (8, 4), rect Just (8, 4)
 
 {----------------------- Exercise 3 -------------------------}
 
