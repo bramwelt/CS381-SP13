@@ -14,11 +14,8 @@ data Cmd = LD Int
          | ADD
          | MULT
          | DUP
-         -- Increment the topmost element of the stack.
          | INC
-         -- Exchange the two topmost elements on the stack.
          | SWAP
-         -- Pops k elements off the top of the stack.
          | POP Int
          deriving Show
 
@@ -46,8 +43,6 @@ sem [] a = a
 sem (x:xs) a = sem xs (semCmd x a)
 
 -- Assign ranks to commands
--- (n, m) n the number of elements removed from the stack
---        m the number of elements added to the stack
 --
 rankC :: Cmd -> CmdRank
 rankC (LD _)  = (0, 1)
@@ -80,7 +75,6 @@ typeSafe p = (rankP p) /= Nothing
 semStatTC :: Prog -> Type
 semStatTC p | typeSafe p = A (sem p [])
             | otherwise  = TypeError
-
 {-
   Question:
       What is the new type of the function sem and why can the
@@ -92,12 +86,12 @@ semStatTC p | typeSafe p = A (sem p [])
        because the type checker handles all TypeErrors.
 -}
 
-p1 = [LD 3, DUP, ADD, LD 5, SWAP] -- Just [6, 5]
-p2 = [LD 8, POP 1, LD 3, DUP, POP 2, LD 4] -- Just [4]
-p3 = [LD 3, LD 4, LD 5, MULT, ADD] -- Just [23]
-p4 = [LD 2, ADD] -- Nothing
-p5 = [DUP] -- Nothing
-p6 = [POP 1] -- Nothing
+p1 = [LD 3, DUP, ADD, LD 5, SWAP] -- A [6, 5]
+p2 = [LD 8, POP 1, LD 3, DUP, POP 2, LD 4] -- A [4]
+p3 = [LD 3, LD 4, LD 5, MULT, ADD] -- A [23]
+p4 = [LD 2, ADD] -- TypeError
+p5 = [DUP] -- TypeError
+p6 = [POP 1] -- TypeError
 
 
 {----------------------- Exercise 2 -------------------------}
