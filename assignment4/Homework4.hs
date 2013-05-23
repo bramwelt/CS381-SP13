@@ -80,6 +80,11 @@
 
 Assume dynamic scoping.
 
+What are the values of y and z at the end of the above block under the
+assumption that both parameters a and x are passed:
+
+(a) Call-By-Name
+
 0  [ ]
 1  [y:?]
 2  [z:?, y:?]
@@ -107,14 +112,11 @@ Assume dynamic scoping.
 14 [z:114, y:55]
 15 [ ]
 
-What are the values of y and z at the end of the above block under the
-assumption that both parameters a and x are passed:
-
-(a) Call-By-Name
-
+--
 y:55, z:114
 
 (b) Call-By-Need
+
 1 [y:?]
 2 [z:?, y:?]
 3 [z:?, y:7]
@@ -136,5 +138,8 @@ y:55, z:114
   11 [g:{}, f:{}, z:-28, y:7]
 14 [z:-28, y:7]
 15 []
-    
+
+--    
+y:7, z:-28
+
 -}
