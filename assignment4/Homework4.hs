@@ -77,7 +77,39 @@
 -}
 
 {- Exercise 3: Parameter Passing
+
+Assume dynamic scoping.
 What are the values of y and z at the end of the above block under the assumption that both parameters a and x are passed:
+
+0  [ ]
+1  [y:?]
+2  [z:?, y:?]
+3  [z:?, y:7]
+4  [f:{}, z:?, y:7]
+8  [g:{}, f:{}, z:?, y:7]
+13 [g:{}, f:{}, z:?, y:7]
+   >>
+   8 [x:14, g:{}, f:{}, z:?, y:7]
+   9 >>
+     4 [a:15, x:14, g:{}, f:{}, z:?, y:7]
+     5 [a:15, x:14, g:{}, f:{}, z:?, y:16]
+     6 [res:31, a:15, x:14, g:{}, f:{}, z:?, y:16]
+     <<
+   9 [x:14, g:{}, f:{}, z:?, y:32]
+   10 >>
+      4 [a:-15, x:14, g:{}, f:{}, z:?, y:32]
+      5 [a:-15, x:14, g:{}, f:{}, z:?, y:-14]
+      6 [res:-29, a:-15, x:14, g:{}, f:{}, z:?, y:-14]
+      <<
+   10 [x:14, g:{}, f:{}, z:-29, y:-14]
+   11 [res:-28, x:14, g:{}, f:{}, z:-29, y:-14]
+   <<
+13 [g:{}, f:{}, z:-28, y:-14]
+14 [z:-28, y:-14]
+15 [ ]
+
 (a) Call-By-Name
+
 (b) Call-By-Need
+
 -}
