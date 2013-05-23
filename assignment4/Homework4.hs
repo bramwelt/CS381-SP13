@@ -23,3 +23,13 @@
 [ ]
 
 -}
+
+{- Exercise 2: Static and Dynamic Scope
+(a) Which value will be assigned to z in line 12 under static scoping?
+(b) Which value will be assigned to z in line 12 under dynamic scoping?
+-}
+{- Exercise 3: Parameter Passing
+What are the values of y and z at the end of the above block under the assumption that both parameters a and x are passed:
+(a) Call-By-Name
+(b) Call-By-Need
+-}
