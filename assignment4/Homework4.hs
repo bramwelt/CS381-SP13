@@ -79,7 +79,6 @@
 {- Exercise 3: Parameter Passing
 
 Assume dynamic scoping.
-What are the values of y and z at the end of the above block under the assumption that both parameters a and x are passed:
 
 0  [ ]
 1  [y:?]
@@ -108,7 +107,12 @@ What are the values of y and z at the end of the above block under the assumptio
 14 [z:-28, y:-14]
 15 [ ]
 
+What are the values of y and z at the end of the above block under the
+assumption that both parameters a and x are passed:
+
 (a) Call-By-Name
+
+y:55, z:114
 
 (b) Call-By-Need
 1 [y:?]
