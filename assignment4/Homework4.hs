@@ -83,9 +83,28 @@ reflect a return statement in the runtime stack.
 -}
 
 {- Exercise 2: Static and Dynamic Scope
+
+   []
+1  [x:?]
+2  [y:?, x:?]
+3  [z:?, y:?, x:?]
+4  [z:?, y:?, x:3]
+5  [z:?, y:7, x:3]
+6  [f:{}, z:?, y:7, x:3]
+15 [z:?, y:7, x:3]
+16 [ ]
+
 (a) Which value will be assigned to z in line 12 under static scoping?
+
+    Line 12 is never called.
+
+
 (b) Which value will be assigned to z in line 12 under dynamic scoping?
+
+    Line 12 is never called.
+
 -}
+
 {- Exercise 3: Parameter Passing
 What are the values of y and z at the end of the above block under the assumption that both parameters a and x are passed:
 (a) Call-By-Name
