@@ -49,27 +49,36 @@ reflect a return statement in the runtime stack.
 
 
 {- Exercise 1: Runtime Stack
+   
+   Assume static scoping and call-by-value parameter passing.
 
 0  [ ] 
-1  [x:?] push
-2  [y:?, x:?] push
-3  [y:1, x:?] push
-4  [f={}, y:1, x:?] push
-11 [f={}, y:1, x:?] push
+1  [x:?]
+2  [y:?, x:?]
+3  [y:1, x:?]
+4  [f={}, y:1, x:?]
+11 [f={}, y:1, x:?]
 11 >>
-   4 [x:2, f={}, y:1, x:?] push
-   8 [f={}, x:2, f={}, y:1, x:?] push
+     [x:2, f={}, y:1, x:?]
+   8 [x:2, f={}, y:1, x:?]
    4 >>
-       4 [x:1, f={}, x:2, f={}, y:1, x:?] push
-       8 [f={}, x:1, f={}, x:2, f={}, y:1, x:?] push
-[x:0, f={}, x:1, f={}, x:2, f={}, y:1, x:?] push
-[y:1, x:0, f={}, x:1, f={}, x:2, f={}, y:1, x:?]  push
-[y:2, x:1, f={}, x:2, f={}, y:1, x:?]  pop x3
-[y:4, x:2, f={}, y:1, x:?]  pop x3
-[y:8, y:1, x:?] pop x3
-[y:1, x:8] pop
-[x:8] pop
-[ ]
+       [x:1, x:2, f={}, y:1, x:?]
+     8 [x:1, x:2, f={}, y:1, x:?]
+     4 >>
+         [x:0, x:1, x:2, f={}, y:1, x:?]
+       5 [x:0, x:1, x:2, f={}, y:1, x:?]
+       6 [x:0, x:1, x:2, f={}, y:1, x:?]
+       9 [res:1, x:0, x:1, x:2, f={}, y:1, x:?]
+       <<
+     8 [x:1, x:2, f={}, y:2, x:?]
+     9 [res:2, x:1, x:2, f={}, y:2, x:?]
+     <<
+   8 [x:2, f={}, y:5, x:?]
+   9 [res: 5, x:2, f={}, y:5, x:?]
+   <<
+11 [f={}, y:5, x:5]
+12 [y:5, x:5]
+13 []
 
 -}
 
