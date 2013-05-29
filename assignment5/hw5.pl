@@ -28,9 +28,11 @@ enroll(john,381).
 enroll(jim,399).
 
 
-/* S-Student, P-Place, T-Time */
+/* (a) schedule: S-Student, P-Place, T-Time */
 schedule(S, P, T) :- enroll(S, C), when(C, T), where(C, P).
 
+/* (b) usage: C-Class, T-Time */
+usage(C, T) :- when(X, T), where(X, C).
 
 /* Exercise 2 */
 
