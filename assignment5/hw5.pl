@@ -1,3 +1,11 @@
+/* 
+
+Authors:
+   Trevor Bramwell
+   Emily Dunham
+   Daniel Reichard
+
+*/
 
 /* Exercise 1 */
 
@@ -20,6 +28,8 @@ enroll(john,381).
 enroll(jim,399).
 
 
+/* S-Student, P-Place, T-Time */
+schedule(S, P, T) :- enroll(S, C), when(C, T), where(C, P).
 
 
 /* Exercise 2 */
