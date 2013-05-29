@@ -31,8 +31,11 @@ enroll(jim,399).
 /* (a) schedule: S-Student, P-Place, T-Time */
 schedule(S, P, T) :- enroll(S, C), when(C, T), where(C, P).
 
-/* (b) usage: C-Class, T-Time */
-usage(C, T) :- when(X, T), where(X, C).
+/* (b) usage: R-Room, T-Time */
+usage(R, T) :- when(X, T), where(X, R).
+
+/* (c) conflict: C1-Class1, C2-Class2 */
+conflict(C1, C2) :- where(C1,X), where(C2,X), when(C1,Y), when(C2,Y), C1\=C2.
 
 /* Exercise 2 */
 
