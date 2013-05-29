@@ -37,6 +37,10 @@ usage(R, T) :- when(X, T), where(X, R).
 /* (c) conflict: C1-Class1, C2-Class2 */
 conflict(C1, C2) :- where(C1,X), where(C2,X), when(C1,Y), when(C2,Y), C1\=C2.
 
+/* (d) meet: S-Student1, R-Student2 */
+meet(S, R) :- schedule(S, P, T), schedule(R, P, T);
+              schedule(S, P, T1), schedule(R, P, T2), T1\==T2+1.
+
 /* Exercise 2 */
 
 
