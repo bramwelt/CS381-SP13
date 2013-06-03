@@ -41,6 +41,31 @@ conflict(C1, C2) :- where(C1,X), where(C2,X), when(C1,Y), when(C2,Y), C1\=C2.
 meet(S, R) :- schedule(S, P, T), schedule(R, P, T);
               schedule(S, P, T1), schedule(R, P, T2), T1\==T2+1.
 
-/* Exercise 2 */
+/* Exercise 2
 
+*****
+*NOTE: length.pl and member.pl will probably be good references for this part.
+*****
+*/
 
+/* (a) Define a Prolog predicate rdup(L,M) to remove duplicates from an ordered
+       list L. The resulting list should be bound to M. Note that M must contain
+       each element of L exactly once and in the same order as in L. You can
+       assume that L is an ordered list.  */
+
+/* rdup(L, M) :- */
+
+/* (b) Define a Prolog predicate flat(L,F) that binds to F the flat list of all
+       elements in L (where L can be a possibly nested list). For example,
+       flat([a,b,[c,d],[],[[[e]]],f],L) yields L = [a,b,c,d,e,f].  */
+
+/* flat(L, F) :- */
+
+/* (c) Define a Prolog predicate project/3 that selects elements from a list by
+       their position and collects them in a result list. For example, the goal
+       project([2,4,5],[a,b,c,d],L) should produce the answer L=[b,d].  You can
+       assume that the numbers in the first list are strictly inreasing, that is,
+       your implementation does not have to care about situations like
+       project([1,1,2],...) or project([2,4,3],...).  */
+
+/* project(F, S, R) :- */
