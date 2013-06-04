@@ -56,8 +56,10 @@ flat3([   ],F,F).
 flat3([X|L],T,F) :- flat3(X,Y,F),flat3(L,T,Y).
 flat3(X,F,[X|F]) :- not(is_list(X)).
 
-/* (c) project */
-project(List,Position,Result) :- forall(nth(List,Position,_),append(nth(List,Position,Result))).
-nth(L,N,X) :- nth4(L,0,N,X) .
-nth4([X|L],N,N,X) :- !. 
-nth4([_|L],T,N,X) :- T1 is T+1 , nth4(L,T1,N,X).
+/* (c) project 
+/*
+    project(List,Position,Result) :- forall(nth(List,Position,_),append(nth(List,Position,Result))).
+    nth(L,N,X) :- nth4(L,0,N,X) .
+    nth4([X|L],N,N,X) :- !. 
+    nth4([_|L],T,N,X) :- T1 is T+1 , nth4(L,T1,N,X).
+*/
