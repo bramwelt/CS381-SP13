@@ -52,14 +52,21 @@ meet(S, R) :- schedule(S, P, T), schedule(R, P, T);
        list L. The resulting list should be bound to M. Note that M must contain
        each element of L exactly once and in the same order as in L. You can
        assume that L is an ordered list.  */
-
-/* rdup(L, M) :- */
+rdup3([],[],_).
+rdup3([X|L],[X|M],T) :- not(member(X,T)),rdup3(L,M,[X|T]).
+rdup3([X|L],[Y|M],T) :- member(X,T),rdup3(L,[Y|M],T).
+rdup3([X|L],[   ],T) :- member(X,T),rdup3(L,[],T).
+rdup(L,M) :- rdup3(L,M,[]).
 
 /* (b) Define a Prolog predicate flat(L,F) that binds to F the flat list of all
        elements in L (where L can be a possibly nested list). For example,
        flat([a,b,[c,d],[],[[[e]]],f],L) yields L = [a,b,c,d,e,f].  */
 
 /* flat(L, F) :- */
+flat(L,F) :- flat3(L,[],F).
+flat3([],F,F).
+flat3([X|L],T,F) :- flat3(X,T1,F),flat3(L,T,T1).
+flat3(X,F,[X|F]) :- not(is_list(X)).
 
 /* (c) Define a Prolog predicate project/3 that selects elements from a list by
        their position and collects them in a result list. For example, the goal
@@ -69,3 +76,4 @@ meet(S, R) :- schedule(S, P, T), schedule(R, P, T);
        project([1,1,2],...) or project([2,4,3],...).  */
 
 /* project(F, S, R) :- */
+
