@@ -52,11 +52,11 @@ meet(S, R) :- schedule(S, P, T), schedule(R, P, T);
        list L. The resulting list should be bound to M. Note that M must contain
        each element of L exactly once and in the same order as in L. You can
        assume that L is an ordered list.  */
+rdup(L,M) :- rdup3(L,M,[]).
 rdup3([],[],_).
 rdup3([X|L],[X|M],T) :- not(member(X,T)),rdup3(L,M,[X|T]).
 rdup3([X|L],[Y|M],T) :- member(X,T),rdup3(L,[Y|M],T).
 rdup3([X|L],[   ],T) :- member(X,T),rdup3(L,[],T).
-rdup(L,M) :- rdup3(L,M,[]).
 
 /* (b) Define a Prolog predicate flat(L,F) that binds to F the flat list of all
        elements in L (where L can be a possibly nested list). For example,
@@ -64,8 +64,8 @@ rdup(L,M) :- rdup3(L,M,[]).
 
 /* flat(L, F) :- */
 flat(L,F) :- flat3(L,[],F).
-flat3([],F,F).
-flat3([X|L],T,F) :- flat3(X,T1,F),flat3(L,T,T1).
+flat3([   ],F,F).
+flat3([X|L],T,F) :- flat3(X,Y,F),flat3(L,T,Y).
 flat3(X,F,[X|F]) :- not(is_list(X)).
 
 /* (c) Define a Prolog predicate project/3 that selects elements from a list by
@@ -77,3 +77,7 @@ flat3(X,F,[X|F]) :- not(is_list(X)).
 
 /* project(F, S, R) :- */
 
+project(List,Position,Result) :- forall(nth(List,Position,_),append(nth(List,Position,Result))).
+nth(L,N,X) :- nth4(L,0,N,X) .
+nth4([X|L],N,N,X) :- !. 
+nth4([_|L],T,N,X) :- T1 is T+1 , nth4(L,T1,N,X).
