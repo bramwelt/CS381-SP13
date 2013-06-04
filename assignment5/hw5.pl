@@ -3,7 +3,7 @@
 Authors:
    Trevor Bramwell
    Emily Dunham
-   Daniel Reichard
+   Daniel Reichart
 
 */
 
